@@ -44,8 +44,10 @@ void insertMap(HashMap * map, char * key, void * value) {
 
   while (map->buckets[index] != NULL && map->buckets[index]->key != NULL && strcmp(map->buckets[index]->key, key) != 0)
     index = (index + 1) % map->capacity;
+  
   if (map->buckets[index] != NULL && map->buckets[index]->key != NULL && strcmp(map->buckets[index]->key, key) == 0)
     return;
+  
   Pair *par = (Pair*)malloc(sizeof(Pair));
   par->key = key;
   par->value = value;
@@ -77,9 +79,13 @@ void eraseMap(HashMap * map,  char * key) {
 }
 
 Pair * searchMap(HashMap * map,  char * key) {   
-
-
+  long index = hash(key, map->capacity);
+  while(map->buckets[index] != NULL && strcmp(map->buckets[index]->key, key))
+  index = (index + 1) % map->capacity;
+  if(map->buckets[index] == NULL || strcmp(map->buckets[index]->key, key) == 0)
     return NULL;
+  map->current = index;
+  return map->buckets[index];
 }
 
 Pair * firstMap(HashMap * map) {
